@@ -24,6 +24,8 @@
 	<properties>
 		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mapsruct.version>1.5.5.Final</mapsruct.version>
+		<lombok.version>1.18.26</lombok.version>
 	</properties>
 
 	<dependencies>
@@ -31,6 +33,11 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapsruct.version}</version>
 		</dependency>
 	</dependencies>
 

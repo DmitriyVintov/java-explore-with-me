@@ -10,11 +10,6 @@
     <name>ewm-main-service</name>
     <artifactId>ewm-main-service</artifactId>
 
-    <properties>
-        <lombok.version>1.18.26</lombok.version>
-        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>ru.practicum</groupId>
@@ -48,7 +43,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -72,7 +66,7 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>${org.mapstruct.version}</version>
+            <version>${mapsruct.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -84,13 +78,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
                 <configuration>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
-                            <version>1.5.5.Final</version>
+                            <version>${mapsruct.version}</version>
                         </path>
                         <path>
                             <groupId>org.projectlombok</groupId>
