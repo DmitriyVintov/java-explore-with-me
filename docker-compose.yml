@@ -1,15 +1,71 @@
-version: '3.1'
+version: "3.1"
 services:
   stats-server:
+    build: ewm-stats-service/stats-server
+    image: ewm-stats
+    container_name: EwmStats
     ports:
       - "9090:9090"
+    depends_on:
+      - stats-db
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    networks:
+      - ewm_backend
 
   stats-db:
-    image: postgres:14-alpine
+    image: postgres:16.0-alpine3.18
+    container_name: EwmStatsDB
+    ports:
+      - "6541:5432"
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - POSTGRES_DB=stats
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+    networks:
+      - ewm_backend
 
   ewm-service:
+    build: ewm-main-service
+    image: ewm-main
+    container_name: EwmMain
     ports:
       - "8080:8080"
+    depends_on:
+      - ewm-db
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - STATS_SERVER_URL=http://stats-server:9090
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm_main
+    networks:
+      - ewm_backend
 
   ewm-db:
-    image: postgres:14-alpine
+    image: postgres:16.0-alpine3.18
+    container_name: EwmMainDB
+    ports:
+      - "6542:5432"
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - POSTGRES_DB=ewm_main
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - TZ=GMT
+    networks:
+      - ewm_backend
+
+networks:
+  ewm_backend:
+    driver: bridge
