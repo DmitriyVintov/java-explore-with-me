@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.main.requests.dto.ParticipationRequestDto;
 import ru.practicum.main.requests.service.RequestService;
 
-
 import java.util.List;
 
 @RestController

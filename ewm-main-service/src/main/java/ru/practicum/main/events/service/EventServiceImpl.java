@@ -53,6 +53,8 @@ public class EventServiceImpl implements EventService {
     private final RequestRepository requestRepository;
     @Autowired
     private final StatsClient statClient;
+    private final EventMapper mapper;
+    private final ParticipationRequestMapper requestMapper;
 
     @Override
     public List<EventShortDto> getEventsByUser(long userId, int from, int size) {
@@ -60,7 +62,7 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException(String.format("User with id=%d was not found", userId)));
         Pageable pageable = PageRequest.of(from / size, size);
         return repository.findAllByInitiatorId(userId, pageable).stream()
-                .map(EventMapper::toShortDto)
+                .map(mapper::toShortDto)
                 .collect(Collectors.toList());
     }
 
@@ -99,14 +101,14 @@ public class EventServiceImpl implements EventService {
         } else {
             event.setParticipantLimit(dto.getParticipantLimit());
         }
-        return EventMapper.toFullDto(repository.save(event));
+        return mapper.toFullDto(repository.save(event));
     }
 
     @Override
     public EventFullDto getEventByIdByUser(long userId, long eventId, HttpServletRequest request) {
         Event event = repository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(String.format("Event with id=%d was not found", eventId)));
-        return EventMapper.toFullDto(event);
+        return mapper.toFullDto(event);
     }
 
     @Override
@@ -155,7 +157,7 @@ public class EventServiceImpl implements EventService {
         if (dto.getTitle() != null) {
             event.setTitle(dto.getTitle());
         }
-        return EventMapper.toFullDto(repository.save(event));
+        return mapper.toFullDto(repository.save(event));
     }
 
     @Override
@@ -207,12 +209,12 @@ public class EventServiceImpl implements EventService {
             addHit(request);
             return events.stream()
                     .filter(event -> (event.getParticipantLimit() > event.getConfirmedRequests().size()) || event.getParticipantLimit() == 0)
-                    .map(EventMapper::toShortDto)
+                    .map(mapper::toShortDto)
                     .collect(Collectors.toList());
         }
         addHit(request);
         return events.stream()
-                .map(EventMapper::toShortDto)
+                .map(mapper::toShortDto)
                 .collect(Collectors.toList());
     }
 
@@ -229,7 +231,7 @@ public class EventServiceImpl implements EventService {
         if (views < updatedViews) {
             event.setViews(event.getViews() + 1);
         }
-        return EventMapper.toFullDto(repository.save(event));
+        return mapper.toFullDto(repository.save(event));
     }
 
     @Override
@@ -269,7 +271,7 @@ public class EventServiceImpl implements EventService {
             events = repository.findAll(pageable).toList();
         }
         return events.stream()
-                .map(EventMapper::toFullDto)
+                .map(mapper::toFullDto)
                 .collect(Collectors.toList());
     }
 
@@ -327,14 +329,14 @@ public class EventServiceImpl implements EventService {
         if (dto.getTitle() != null) {
             event.setTitle(dto.getTitle());
         }
-        return EventMapper.toFullDto(repository.save(event));
+        return mapper.toFullDto(repository.save(event));
     }
 
     @Override
     public List<ParticipationRequestDto> getRequestsByEventIdByUser(long userId, long eventId) {
         validation(userId, eventId);
         return requestRepository.findAllByEventId(eventId).stream()
-                .map(ParticipationRequestMapper::toDto)
+                .map(requestMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -358,15 +360,15 @@ public class EventServiceImpl implements EventService {
             if (updateRequest.getStatus() == NewRequestStatus.CONFIRMED) {
                 if (limit < event.getParticipantLimit()) {
                     request.setStatus(RequestStatus.CONFIRMED);
-                    result.getConfirmedRequests().add(ParticipationRequestMapper.toDto(request));
+                    result.getConfirmedRequests().add(requestMapper.toDto(request));
                     limit++;
                 } else {
                     request.setStatus(RequestStatus.REJECTED);
-                    result.getRejectedRequests().add(ParticipationRequestMapper.toDto(request));
+                    result.getRejectedRequests().add(requestMapper.toDto(request));
                 }
             } else {
                 request.setStatus(RequestStatus.REJECTED);
-                result.getRejectedRequests().add(ParticipationRequestMapper.toDto(request));
+                result.getRejectedRequests().add(requestMapper.toDto(request));
             }
         }
         requestRepository.saveAll(requests);

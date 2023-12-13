@@ -13,31 +13,32 @@ import ru.practicum.main.exceptions.ForbiddenArgumentException;
 import ru.practicum.main.exceptions.NotFoundException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository repository;
     private final EventRepository eventRepository;
+    private final CategoryMapper mapper;
 
     @Override
     public CategoryDto addCategoryByAdmin(CategoryDto dto) {
-        return CategoryMapper.toDto(repository.save(CategoryMapper.toCategory(dto)));
+        return mapper.toDto(repository.save(mapper.toCategory(dto)));
     }
 
     @Override
     public CategoryDto updateCategoryByAdmin(long catId, CategoryDto dto) {
-        Category category = CategoryMapper.toCategory(getCategoryById(catId));
+        Category category = mapper.toCategory(getCategoryById(catId));
         category.setName(dto.getName());
-        return CategoryMapper.toDto(repository.save(category));
+        return mapper.toDto(repository.save(category));
     }
 
     @Override
     public void deleteCategoryByAdmin(long catId) {
-        repository.findById(catId)
-                .orElseThrow(() -> new NotFoundException(String.format("Category with id=%d was not found", catId)));
-        if (!eventRepository.findAllByCategoryId(catId).isEmpty()) {
+        if (!repository.existsById(catId)) {
+            throw new NotFoundException(String.format("Category with id=%d was not found", catId));
+        }
+        if (eventRepository.countEventsByCategoryId(catId) != 0) {
             throw new ForbiddenArgumentException("The category is not empty");
         }
         repository.deleteById(catId);
@@ -46,14 +47,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDto> getAllCategories(int from, int size) {
         Pageable pageable = PageRequest.of(from / size, size);
-        return repository.findAll(pageable).stream()
-                .map(CategoryMapper::toDto)
-                .collect(Collectors.toList());
+        return mapper.toCategoryDtoList(repository.findAll(pageable));
     }
 
     @Override
     public CategoryDto getCategoryById(long catId) {
-        return CategoryMapper.toDto(repository.findById(catId)
+        return mapper.toDto(repository.findById(catId)
                 .orElseThrow(() -> new NotFoundException(String.format("Category with id=%d was not found", catId))));
     }
 }

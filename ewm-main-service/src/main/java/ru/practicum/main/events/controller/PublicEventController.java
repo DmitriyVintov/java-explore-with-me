@@ -10,7 +10,6 @@ import ru.practicum.main.events.dto.EventShortDto;
 import ru.practicum.main.events.model.enums.SortEventsBy;
 import ru.practicum.main.events.service.EventService;
 
-
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;

@@ -8,7 +8,6 @@ import ru.practicum.main.users.dto.NewUserRequestDto;
 import ru.practicum.main.users.dto.UserDto;
 import ru.practicum.main.users.service.UserService;
 
-
 import javax.validation.Valid;
 import java.util.List;
 

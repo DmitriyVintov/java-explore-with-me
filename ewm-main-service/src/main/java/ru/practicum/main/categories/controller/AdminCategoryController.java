@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.main.categories.dto.CategoryDto;
 import ru.practicum.main.categories.service.CategoryService;
 
-
 import javax.validation.Valid;
 
 @RestController

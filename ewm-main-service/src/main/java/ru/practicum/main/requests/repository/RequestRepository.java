@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.main.requests.model.ParticipationRequest;
 import ru.practicum.main.requests.model.enums.RequestStatus;
 
-
 import java.util.List;
 
 public interface RequestRepository extends JpaRepository<ParticipationRequest, Long> {

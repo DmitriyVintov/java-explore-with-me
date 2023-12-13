@@ -1,23 +1,11 @@
 package ru.practicum.main.compilations.mapper;
 
-import lombok.experimental.UtilityClass;
+import org.mapstruct.Mapper;
 import ru.practicum.main.compilations.dto.CompilationDto;
 import ru.practicum.main.compilations.model.Compilation;
 import ru.practicum.main.events.mapper.EventMapper;
 
-
-import java.util.stream.Collectors;
-
-@UtilityClass
-public class CompilationMapper {
-    public static CompilationDto toDto(Compilation compilation) {
-        return CompilationDto.builder()
-                .events(compilation.getEvents().stream()
-                        .map(EventMapper::toShortDto)
-                        .collect(Collectors.toList()))
-                .id(compilation.getId())
-                .pinned(compilation.getPinned())
-                .title(compilation.getTitle())
-                .build();
-    }
+@Mapper(componentModel = "spring", uses = {EventMapper.class})
+public interface CompilationMapper {
+    CompilationDto toDto(Compilation compilation);
 }

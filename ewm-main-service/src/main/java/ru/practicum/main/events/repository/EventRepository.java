@@ -7,16 +7,14 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.main.events.model.Event;
 
-
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecificationExecutor<Event> {
     List<Event> findAllByInitiatorId(long userId, Pageable pageable);
 
-    @Query(value = "select * from events e where e.id in ?1", nativeQuery = true)
-    List<Event> findAllByIds(List<Long> ids);
+    List<Event> findAllByIdIn(List<Long> ids);
 
-    List<Event> findAllByCategoryId(long catId);
+    long countEventsByCategoryId(long catId);
 
     @Query("select e from Event e " +
             "where lower(e.annotation) like lower(concat('%', ?1, '%')) or " +

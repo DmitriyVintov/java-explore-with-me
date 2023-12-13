@@ -25,13 +25,14 @@ public class RequestServiceImpl implements RequestService {
     private final RequestRepository repository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final ParticipationRequestMapper mapper;
 
     @Override
     public List<ParticipationRequestDto> getRequestByUserIdByUser(long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User with id=%d was not found", userId)));
         return repository.findAllByRequesterId(userId).stream()
-                .map(ParticipationRequestMapper::toDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -66,7 +67,7 @@ public class RequestServiceImpl implements RequestService {
         if (!event.isRequestModeration()) {
             request.setStatus(RequestStatus.CONFIRMED);
         }
-        return ParticipationRequestMapper.toDto(repository.save(request));
+        return mapper.toDto(repository.save(request));
     }
 
     @Override
@@ -77,6 +78,6 @@ public class RequestServiceImpl implements RequestService {
             throw new RuntimeException();
         }
         request.setStatus(RequestStatus.CANCELED);
-        return ParticipationRequestMapper.toDto(repository.save(request));
+        return mapper.toDto(repository.save(request));
     }
 }

@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
+    private final UserMapper mapper;
 
     @Override
     public List<UserDto> get(List<Long> ids, int from, int size) {
@@ -24,11 +25,11 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.ASC, "id"));
         if (ids == null) {
             users = repository.findAll(pageable).stream()
-                    .map(UserMapper::toUserDto)
+                    .map(mapper::toUserDto)
                     .collect(Collectors.toList());
         } else {
-            users = repository.findAllByIds(ids, pageable).stream()
-                    .map(UserMapper::toUserDto)
+            users = repository.findAllByIdIn(ids, pageable).stream()
+                    .map(mapper::toUserDto)
                     .collect(Collectors.toList());
         }
         return users;
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto add(NewUserRequestDto newUser) {
-        return UserMapper.toUserDto(repository.save(UserMapper.toUser(newUser)));
+        return mapper.toUserDto(repository.save(mapper.toUser(newUser)));
     }
 
     @Override

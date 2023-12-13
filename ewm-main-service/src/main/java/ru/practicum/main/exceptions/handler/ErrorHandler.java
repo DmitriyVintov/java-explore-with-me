@@ -1,14 +1,15 @@
 package ru.practicum.main.exceptions.handler;
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import org.hibernate.exception.ConstraintViolationException;
-import ru.practicum.main.exceptions.*;
+import ru.practicum.main.exceptions.ForbiddenArgumentException;
+import ru.practicum.main.exceptions.NotFoundException;
+import ru.practicum.main.exceptions.ValidationRequestException;
 import ru.practicum.main.exceptions.dto.ApiError;
 
 import javax.xml.bind.ValidationException;

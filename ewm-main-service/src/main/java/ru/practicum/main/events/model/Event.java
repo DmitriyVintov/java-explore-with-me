@@ -8,18 +8,18 @@ import ru.practicum.main.location.model.Location;
 import ru.practicum.main.requests.model.ParticipationRequest;
 import ru.practicum.main.users.model.User;
 
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "events", schema = "public")
 @Builder
+@Getter
+@Setter
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

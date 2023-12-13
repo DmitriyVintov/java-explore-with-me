@@ -4,17 +4,17 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.main.events.model.Event;
 
-
 import javax.persistence.*;
 import java.util.List;
 
-@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "compilations", schema = "public")
 @Builder
+@Getter
+@Setter
 public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -9,7 +9,6 @@ import ru.practicum.main.compilations.dto.NewCompilationDto;
 import ru.practicum.main.compilations.dto.UpdateCompilationRequestDto;
 import ru.practicum.main.compilations.service.CompilationService;
 
-
 import javax.validation.Valid;
 
 @RestController

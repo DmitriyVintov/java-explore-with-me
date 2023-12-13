@@ -1,7 +1,6 @@
 package ru.practicum.main.events.service;
 
 
-
 import ru.practicum.main.events.dto.*;
 import ru.practicum.main.events.model.enums.SortEventsBy;
 import ru.practicum.main.events.model.enums.State;

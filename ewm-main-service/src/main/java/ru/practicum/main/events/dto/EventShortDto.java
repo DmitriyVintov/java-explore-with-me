@@ -7,7 +7,6 @@ import ru.practicum.main.categories.dto.CategoryDto;
 import ru.practicum.main.constants.FormatDateTime;
 import ru.practicum.main.users.dto.UserShortDto;
 
-
 import java.time.LocalDateTime;
 
 @Data

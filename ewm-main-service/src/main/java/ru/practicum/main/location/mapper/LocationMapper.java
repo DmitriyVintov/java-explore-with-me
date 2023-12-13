@@ -1,16 +1,12 @@
 package ru.practicum.main.location.mapper;
 
-import lombok.experimental.UtilityClass;
+import org.mapstruct.Mapper;
 import ru.practicum.main.location.dto.LocationDto;
 import ru.practicum.main.location.model.Location;
 
 
-@UtilityClass
-public class LocationMapper {
-    public static LocationDto toDto(Location location) {
-        return LocationDto.builder()
-                .lat(location.getLat())
-                .lon(location.getLon())
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface LocationMapper {
+    LocationDto toDto(Location location);
+
 }

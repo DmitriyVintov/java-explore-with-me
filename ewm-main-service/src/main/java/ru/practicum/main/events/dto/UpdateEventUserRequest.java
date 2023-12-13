@@ -8,7 +8,6 @@ import ru.practicum.main.constants.FormatDateTime;
 import ru.practicum.main.events.model.enums.UserStateAction;
 import ru.practicum.main.location.dto.LocationDto;
 
-
 import javax.validation.constraints.Future;
 import java.time.LocalDateTime;
 

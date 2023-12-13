@@ -22,34 +22,35 @@ import java.util.stream.Collectors;
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository repository;
     private final EventRepository eventRepository;
+    private final CompilationMapper mapper;
 
     @Override
     public List<CompilationDto> getCompilationsPublic(Boolean pinned, int from, int size) {
         Pageable pageable = PageRequest.of(from / size, size);
         if (pinned == null) {
             return repository.findAll(pageable).stream()
-                    .map(CompilationMapper::toDto)
+                    .map(mapper::toDto)
                     .collect(Collectors.toList());
         }
         return repository.findAllByPinned(pinned, pageable).stream()
-                .map(CompilationMapper::toDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public CompilationDto getCompilationByIdPublic(long compId) {
-        return CompilationMapper.toDto(repository.findById(compId)
+        return mapper.toDto(repository.findById(compId)
                 .orElseThrow(() -> new NotFoundException(String.format("Compilation with id=%d was not found", compId))));
     }
 
     @Override
     public CompilationDto add(NewCompilationDto dto) {
         Compilation compilation = Compilation.builder()
-                .events(dto.getEvents() == null ? new ArrayList<>() : eventRepository.findAllByIds(dto.getEvents()))
+                .events(dto.getEvents() == null ? new ArrayList<>() : eventRepository.findAllByIdIn(dto.getEvents()))
                 .title(dto.getTitle())
                 .pinned(dto.getPinned() == null ? false : dto.getPinned())
                 .build();
-        return CompilationMapper.toDto(repository.save(compilation));
+        return mapper.toDto(repository.save(compilation));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = repository.findById(compId)
                 .orElseThrow(() -> new NotFoundException(String.format("Compilation with id=%d was not found", compId)));
         if (dto.getEvents() != null) {
-            compilation.setEvents(eventRepository.findAllByIds(dto.getEvents()));
+            compilation.setEvents(eventRepository.findAllByIdIn(dto.getEvents()));
         }
         if (dto.getPinned() != null) {
             compilation.setPinned(dto.getPinned());
@@ -70,6 +71,6 @@ public class CompilationServiceImpl implements CompilationService {
         if (dto.getTitle() != null) {
             compilation.setTitle(dto.getTitle());
         }
-        return CompilationMapper.toDto(repository.save(compilation));
+        return mapper.toDto(repository.save(compilation));
     }
 }
