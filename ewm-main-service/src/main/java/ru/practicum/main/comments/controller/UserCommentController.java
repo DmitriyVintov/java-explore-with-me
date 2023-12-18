@@ -1,8 +1,6 @@
 package ru.practicum.main.comments.controller;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -26,14 +24,13 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@FieldDefaults(level = AccessLevel.PUBLIC)
 @Slf4j
 public class UserCommentController {
     private final CommentService commentService;
 
     @PostMapping("/user/{userId}/events/{eventId}/comment/")
     @ResponseStatus(HttpStatus.CREATED)
-    CommentResponseDto createCommentUser(
+    public CommentResponseDto createCommentUser(
             @PathVariable @Min(1) Long userId,
             @PathVariable @Min(1) Long eventId,
             @RequestBody @Valid CommentCreateDto dto
@@ -45,7 +42,7 @@ public class UserCommentController {
     }
 
     @GetMapping("/events/{eventId}/comments")
-    List<CommentResponseDto> getCommentsPublic(
+    public List<CommentResponseDto> getCommentsPublic(
             @PathVariable @Min(1) Long eventId,
             @RequestParam(defaultValue = "0") @Min(0) int from,
             @RequestParam(defaultValue = "10") @Min(1) int size
@@ -57,7 +54,7 @@ public class UserCommentController {
     }
 
     @GetMapping("/comment/{commentId}")
-    CommentResponseDto getCommentById(
+    public CommentResponseDto getCommentById(
             @PathVariable @Min(1) Long commentId
     ) {
         CommentResponseDto commentById = commentService.getCommentById(commentId);
@@ -67,7 +64,7 @@ public class UserCommentController {
     }
 
     @PatchMapping("/user/{userId}/comment/{commentId}")
-    CommentResponseDto updateCommentByUser(
+    public CommentResponseDto updateCommentByUser(
             @PathVariable @Min(0) Long userId,
             @PathVariable @Min(0) Long commentId,
             @RequestBody @Valid CommentCreateDto dto
@@ -80,7 +77,7 @@ public class UserCommentController {
 
     @DeleteMapping("/user/{userId}/comment/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteCommentUser(
+    public void deleteCommentUser(
             @PathVariable @Min(1) Long userId,
             @PathVariable @Min(1) Long commentId
     ) {
